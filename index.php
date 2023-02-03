@@ -54,9 +54,17 @@
                 <form action="logout.php" method="post">
                     <button type="submit" class="here" name="log-out">Log out</button>
                 </form>
-
-                <a href="editUser.php">Edit Users</a>
-             
+                <?php
+                    //visible edit users only for tutor and not students
+                    if($_SESSION["Role"] === 'Tutor'){
+                ?>
+                <hr>
+                <form action="editUser.php" method="post">
+                    <button type="submit" name="edit-users">Edit Users</button>
+                </form>
+                <?php
+                    }
+                ?>
             </div>
         </div>
         
