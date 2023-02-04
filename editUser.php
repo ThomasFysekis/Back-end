@@ -156,8 +156,6 @@
 
     </style>
 
-
-
     <div class="container-for-editUser">
         <div class="box">
             <form action="#" method="post">
@@ -191,7 +189,7 @@
                 </table>
         
                     
-           
+
         </div>
 
         <div id="popup1" class="overlay">

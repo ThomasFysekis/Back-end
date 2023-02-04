@@ -9,6 +9,27 @@
     <head>
         <link rel="stylesheet" href="style.css">
         <title>Αρχική Σελίδα</title>
+        <style>
+            .login-but:hover {
+                box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+            }
+
+            .login-but {
+                background-color: #4CAF50; /* Green */
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                -webkit-transition-duration: 0.4s; /* Safari */
+                transition-duration: 0.4s;
+            }
+
+        </style>
     </head>
     <body>
 
@@ -52,15 +73,14 @@
                 <br>
                 <img class="img-ai" src="images/ai-image.png">
                 <form action="logout.php" method="post">
-                    <button type="submit" class="here" name="log-out">Log out</button>
+                    <button type="submit" class="login-but" name="log-out">Log out</button>
                 </form>
                 <?php
                     //visible edit users only for tutor and not students
                     if($_SESSION["Role"] === 'Tutor'){
                 ?>
-                <hr>
                 <form action="editUser.php" method="post">
-                    <button type="submit" name="edit-users">Edit Users</button>
+                    <button type="submit" class="login-but" name="edit-users">Edit Users</button>
                 </form>
                 <?php
                     }
