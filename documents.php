@@ -6,6 +6,8 @@
         header("Location: login.php");
     }
 
+    $_SESSION['Table'] = 'Documents';
+
     //Get all the data from the table Documents
     $sql = "SELECT * FROM Documents";
     $data = mysqli_query($conn, $sql);
@@ -35,7 +37,7 @@
                     <?php
                         //If the user is Tutor,he can create documents
                         if($_SESSION['Role'] === 'Tutor'){
-                            echo '<span style="font-size: 30px;"><a href="createDocument.php">Προσθήκη νέou εγγράφου</a></span>';
+                            echo '<span style="font-size: 30px;"><a href="documentSettings.php">Προσθήκη νέou εγγράφου</a></span>';
                         }
                     ?>
 
@@ -44,7 +46,19 @@
                         while($row = mysqli_fetch_assoc($data)){
                     ?>
                     <div class="border-bottom">
-                        <h2><?php echo $row['Title']?></h2>
+                        <h2>Έγραφο <?php echo $row["Number"];
+                        
+                            //If Tutor,delete or edit annnouncement
+                            if($_SESSION['Role'] === 'Tutor'){
+                                //Send the id to delete/edit
+                                echo '<a href="delete.php?link=' . $row["Number"] . '">[Διαγραφή]</a>';
+                                echo '<a href="documentSettings.php?link=' . $row["Number"] . '">[Επεξεργασία]</a>';
+                            }
+                        
+                        
+                        ?></h2>
+
+                        <h2><?php echo $row['Title'];?></h2>
 
                         <div class="inner-text">
                             <p><?php echo $row['Description']?></p>

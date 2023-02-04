@@ -3,6 +3,8 @@
 
     //check if the user is loged in 
     session_start();
+
+    $_SESSION['Table'] = 'Announcements';
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
@@ -47,7 +49,7 @@
                             //If Tutor,delete or edit annnouncement
                             if($_SESSION['Role'] === 'Tutor'){
                                 //Send the id to delete/edit
-                                echo '<a href="deleteAnnouncement.php?link=' . $row["Number"] . '">[Διαγραφή]</a>';
+                                echo '<a href="delete.php?link=' . $row["Number"] . '">[Διαγραφή]</a>';
                                 echo '<a href="announcementsSettings.php?link=' . $row["Number"] . '">[Επεξεργασία]</a>';
                             }
                         ?>

@@ -1,53 +1,53 @@
 <?php
+    include "db_connection.php";
     //check if user is loged in
     session_start();
-    include "db_connection.php";
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
 
-    //if the user press the add-button call createAnnouncement
+    //if the user press the add-button call createHomework
     if(isset($_POST['add-button'])) {
-        createAnnouncement();
+        createHomework();
     }
 
-    //if user wants to edit/update the announcemnt
-    //get all the data from the table and print them into placeholders
-    if ($_GET['link'] == true){
+    //Get data from table homework if Tutor wants to edit/update
+    if($_GET['link'] == true){
+        
         $id = $_GET['link'];
-        $sql = "SELECT * FROM Announcements WHERE Number = '$id'";
+        $sql = "SELECT * FROM Homework WHERE Number = '$id'";
         $data = mysqli_query($conn, $sql);
+        //row is an array with the data of our user,we can play the data
+        //into the placeholder so the user can change waht he wants
         $row = mysqli_fetch_assoc($data);
-   }
+    }
 
     //This function can create or edit the announcement that the user selected
-    function createAnnouncement(){
-        //inculde connection for adding data to the database
+    function createHomework(){
+        //inculde connection for adding data to the table homework
         include "db_connection.php";
 
         //Get the info from the form
         $number = $_POST['number'];
-        $date = $_POST['date'];
+        $goal = $_POST['goal'];
         $sub = $_POST['subject'];
-        $text = $_POST['main-text'];
+        $delivered = $_POST['delivered'];
+        $date = $_POST['date'];
 
-        //If the user wants to edit/update the announcement he gets the ID variable
-        if ($_GET['link'] == true){
+        //if the user wants to edit/update the homework
+        if($_GET['link'] == true){
             $id = $_GET['link'];
-            $update = "UPDATE Announcements SET Date ='".$date."', Subject ='".$sub."', MainText = '".$text."', Number = '".$number."' WHERE Number = '".$id."'";
+            $update = "UPDATE Homework SET Number ='".$number."', Goal ='".$goal."', Subject = '".$sub."', Delivered = '".$delivered."', Date = '".$date."' WHERE Number = '".$id."'";
             mysqli_query($conn, $update);
-       }
-       //Create the announcement
-       else{
-            $sql = "INSERT INTO Announcements (Number, Date, Subject, MainText) 
-                VALUES ('$number', '$date', '$sub', '$text')";
-            mysqli_query($conn, $sql);
-            $createThread = true;
         }
-        //Go back to announcements
-        header("Location: announcements.php");
+        //Create homework
+        else{
+            $sql = "INSERT INTO Homework (Number, Goal, Subject, Delivered, Date)
+                VALUES('$number', '$goal', '$sub', '$delivered', '$date')";
+            mysqli_query($conn, $sql);
+        }
+        header("Location: homework.php");
     }
-
 ?>
 
 
@@ -128,7 +128,7 @@
 
     <form action="" method="post" style="border:1px solid #ccc">
         <div class="container">
-            <h1>Προσθήκη νέας ανακοίνωσεις</h1>
+            <h1>Προσθήκη νέας Εργασίας</h1>
 
             <hr>
 
@@ -137,8 +137,8 @@
 
             <hr>
 
-            <label for="date"><b>Ημερομηνία <?php echo $row["Date"];?></b></label>
-            <input type="date" name="date" required>
+            <label for="goal"><b>Στόχοι </b><?php echo $row["Goal"];?></label>
+            <input type="text" name="goal" placeholder="Εισαγωγή στόχου" required>
 
             <hr>
 
@@ -147,14 +147,19 @@
 
             <hr>
 
-            <label for="main-text"><b>Κείμενο <?php echo $row["MainText"];?></b></label>
-            <input type="text" placeholder="Εισαγωγή κειμένου" name="main-text" required>
+            <label for="delivered"><b>Παραδοτέα <?php echo $row["Delivered"];?></b></label>
+            <input type="text" placeholder="Εισαγωγή κειμένου" name="delivered" required>
+
+            <hr>
+
+            <label for="date"><b>Ημερομηνία Παράδοσης  <?php echo $row["Date"];?></b></label>
+            <input type="date" placeholder="Εισαγωγή κειμένου" name="date" required>
 
             <hr>
 
 
             <div class="clearfix">
-                <a href="announcements.php">
+                <a href="homework.php">
                     <button type="button" class="cancelbtn">Ακύρωση</button>
                 
                 <button type="submit" class="add" name="add-button">Προσθήκη</button>

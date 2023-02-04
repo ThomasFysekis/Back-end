@@ -3,6 +3,9 @@
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
+
+    $_SESSION['Table'] = 'Users';
+
     include "db_connection.php";
     //select everything from the table Users
     $sql = "SELECT * FROM Users";
@@ -14,21 +17,6 @@
         createUser();
     }
     
-    if(isset($_POST['delete-button'])){
-        header("Location: index.pgp");
-        //echo "yes";
-        //deleteUser();
-
-    }
-
-    //we delete a user
-    /*function deleteUser(){
-        include "db_connection.php";
-        echo "yes";
-        $id = $_GET['id'];
-        echo $id;
-    }*/
-    //here we insert data to the table Users
     function createUser(){
         include "db_connection.php";
         //Get the info from the form
@@ -74,6 +62,18 @@
         color: white;
         }
         
+        .index{
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
         .container-for-editUser{
             display: flex;
             flex-direction: column;
@@ -159,6 +159,12 @@
     <div class="container-for-editUser">
         <div class="box">
             <form action="#" method="post">
+            <?php
+                //if user tries to delete himself he gets an error message
+                if ($_GET){
+                    echo "You can't delete yourself!";
+                }
+            ?>
                 <table id="users-table">
                     <tr>
                         <th>Role</th>
@@ -181,7 +187,7 @@
                         <td><?php echo$row["Loginname"]?></td>
                         <td><?php echo$row["Password"]?></td>
                         <td><a href="updateUser.php?link=<?php echo $row["Loginname"] ?>" class="button" type="submit" name="insert-button">Επεξεργασία</a></td>
-                        <td><a href="deleteUser.php?link=<?php echo $row["Loginname"] ?>" class="button" type="submit" name="delete-button">Διαγραφή</a></td>
+                        <td><a href="delete.php?link=<?php echo $row["Loginname"] ?>" class="button" type="submit" name="delete-button">Διαγραφή</a></td>
                     </tr>
                     <?php
                     }
@@ -221,7 +227,7 @@
         <hr>
 
         <form action="index.php">
-            <input type="submit" value="Go to index" />
+            <input type="submit" class="index" value="Go to index" />
         </form>
     </div>
     </body>

@@ -1,7 +1,20 @@
 <?php
+    include "db_connection.php";
+    //check if the user is loged in
     session_start();
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
+    }
+
+    $_SESSION['Table'] = 'Homework';
+
+    
+    //Get all the data from the table
+    $sql = "SELECT * FROM Homework";
+    $result = mysqli_query($conn, $sql);
+
+    function deleteHomework($value){
+        
     }
 ?>
 <!DOCTYPE html>
@@ -25,30 +38,50 @@
                 <a href="homework.php" class="button">Εργασίες</a>     
             </div>
             <div class="main-border">
+                <?php
+                    //If the user is Tutor,he can create announcments
+                    if($_SESSION['Role'] === 'Tutor'){
+                        echo '<span style="font-size: 30px;"><a href="homeworkSettings.php">Προσθήκη νέας Εργασίας</a></span>';
+                    }
+                ?>
+                <?php
+                    //while we have data,print them
+                    while($row = mysqli_fetch_assoc($result)){
+                ?>
                 <div class="border-bottom">
-                    <h2>Εργασία 1</h2>
+
+                    <h2>Εργασία <?php echo $row["Number"]; 
+                        //If Tutor,delete or edit annnouncement
+                        if($_SESSION['Role'] === 'Tutor'){
+                            //Send the id to delete/edit
+                            echo '<a href=delete.php?link=' .$row["Number"] .'>[Διαγραφή] </a>';
+                            echo '<a href="homeworkSettings.php?link=' . $row["Number"] . '">[Επεξεργασία]</a>';
+                        }
+                    
+                    ?></h2>
                     <div class="inner-text-for-hm">
                         <pa>Στόχοι:Οι στόχοι τις εργασίας είναι</pa>
                         <ul class="text-list">
-                            <li>Εξάσκηση στον αλγόριθμο BFS</li>
-                            <li>Εξάσκηση στον αλγόριθμο DFS</li>
-                            <li>Εξάσκηση στον αλγόριθμο ID</li>
+                            <li><?php echo $row["Goal"];?></li>
                         </ul>
                         <pa>Εκφώνηση:</pa>
                         <br>
                         <br>
-                        <pa>Κατεβάστε την εκφώνηση της εργασίας από <a href="docs/ergasia1.doc" download="ergasia1.doc">εδώ</a>. </pa>
+                        <pa><?php echo $row["Subject"];?></a>. </pa>
                         <br>
                         <br>
                         <pa>Παραδοτέα: </pa>
                         <ul class="text-list">
-                            <li>Γραπτή αναφορά σε word</li>
-                            <li>Παρουσίαση σε powerpoint</li>
+                            <li><?php echo $row["Delivered"];?></li>
                         </ul>
                         
-                        <p style="color:red">Ημερομηνία παράδοσης: 1/09/2022</p>
+                        <p style="color:red">Ημερομηνία παράδοσης: <?php echo $row["Date"];?></p>
                     </div>
                 </div>
+                <?php
+                    }
+                ?>
+                    <!--
                 <div class="border-bottom">
                     <h2>Εργασία 2</h2>
                     <div class="inner-text-for-hm">
@@ -80,7 +113,7 @@
                     <button type="submit" class="here" name="log-out">Log out</button>
                 </form>
                 <br>
-                <br>
+                <br>--->
 
                 
             </div>
