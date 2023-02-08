@@ -1,56 +1,22 @@
 <?php
     //check if user is loged in
     session_start();
+    include "functions.php";
+    //database connect
+    connected($conn);
+    
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
 
-    include "db_connection.php";
     
     //if user wants to edit/update the announcemnt
     //get all the data from the table and print them into placeholders
     if ($_GET['link'] == true){
         $id = $_GET['link'];
-        $sql = "SELECT * FROM Documents WHERE Number = '$id'";
+        $sql = "SELECT * FROM documents WHERE Number = '$id'";
         $data = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($data);
-    }
-    
-        function checkForValidID($id){
-            include "db_connection.php";
-            //User can't create an homework that already exist(with the same ID==number)
-            $query = "SELECT Number FROM Documents";
-            $result = mysqli_query($conn, $query);
-            $flag = false;
-            //Search if the id exists in the table
-            while ( $array = mysqli_fetch_assoc($result)){
-                if ($array["Number"] == $id){
-                    $flag = true;
-                }
-            }
-            if ($flag){
-                return true;
-            }else{
-                return false;
-            }
-        }
-    
-    function uploadFile($pwd){
-        $path_filename_ext = "";
-        if (($_FILES[$pwd]['name'] != "")) {
-            // Where the file is going to be stored
-            $target_dir = "./uploads/";
-            $file = $_FILES[$pwd]['name'];
-            $path = pathinfo($file);
-            $filename = $path['filename'];
-            $ext = $path['extension'];
-            $temp_name = $_FILES[$pwd]['tmp_name'];
-            $path_filename_ext = $target_dir . $filename . "." . $ext;
-            
-
-            move_uploaded_file($temp_name, $path_filename_ext);
-        }
-        return $path_filename_ext;
     }
 
 
@@ -62,19 +28,33 @@
         $sub = $_POST['subject'];
         $location = uploadFile("documentToUpload");
 
+        
+        //This is the case that the user is editing the doc and he doesn't change the uique ID
+        if($_GET['link'] == true){
+            $id = $_GET['link'];
+            if($id == $number){
+                $update = "UPDATE documents SET Title ='".$title."', Description = '".$sub."', FileLocation = '".$location."' WHERE Number = '".$id."'";
+                mysqli_query($conn, $update);
+                //Go back to documents
+                header("Location: documents.php");
+                exit;
+            }
+        }
+
+
         //check if the id is unique or not
         if(checkForValidID($number) == false){
             //If the user wants to edit/update the document he gets the ID variable
             if ($_GET['link'] == true){
                 $id = $_GET['link'];
-                $update = "UPDATE Documents SET Number ='".$number."', Title ='".$title."', Description = '".$sub."', FileLocation = '".$location."' WHERE Number = '".$id."'";
+                $update = "UPDATE documents SET Number ='".$number."', Title ='".$title."', Description = '".$sub."', FileLocation = '".$location."' WHERE Number = '".$id."'";
                 mysqli_query($conn, $update);
                 //Go back to doc
                 header("Location: documents.php");
             }
             //create the document
             else{
-                $sql = "INSERT INTO Documents (Number, Title, Description, FileLocation) 
+                $sql = "INSERT INTO documents (Number, Title, Description, FileLocation) 
                     VALUES ( '$number', '$title', '$sub', '$location' )";
                 mysqli_query($conn, $sql);   
                 //Go back to documents
@@ -86,9 +66,7 @@
             header("Location: documents.php?value = .$value");
         }
     }
-        
 
-    
 
 ?>
 

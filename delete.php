@@ -1,6 +1,7 @@
 <?php
-
-    include "db_connection.php";
+    include "functions.php";
+    //database connect
+    connected($conn);
     session_start();
 
     //check if user is loged in
@@ -10,44 +11,35 @@
 
     //Delete data from the table that is saved into SESSION
 
-    if($_SESSION['Table'] === 'Announcements'){
-         //Get the id variable
+    if(isset($_GET['link'])){
+        $table = $_SESSION['Table'];
+        //Get the id variable
         $id = $_GET['link'];
-        //Find the announcement
-        $query = "DELETE FROM Announcements WHERE Number = '$id'";
+        //Find in the table what to delete with the ID
+        $query = "DELETE FROM $table WHERE Number = '$id'";
         //Execute delete
         $result = mysqli_query($conn, $query);
-        header("Location: announcements.php");
-    }else if ($_SESSION['Table'] === 'Users'){
-        //get the email from the user(key)
-        $id = $_GET['link'];
+        header("Location: $table.php");
+        exit;
+    }else{
         //If the user is trying delete himself,send him an error message
-        if(!($_SESSION["Loginname"] == $id)){
-            //Find the user
-            $query = "DELETE FROM Users WHERE Loginname = '$id'";
-            //Execute delete
-            $result = mysqli_query($conn, $query);
-            header("Location: editUser.php");
-        }else{
+        $id = $_GET['email'];
+        if(($_SESSION["Loginname"] == $id)){
             //send an error message to editUser because he is trying to delete himself
             $value = 0;
             header("Location: editUser.php?value = .$value");
+            exit;
+        }else{
+            $table = $_SESSION['Table'];
+            //Get the email variable
+            $id = $_GET['email'];
+            $query = "DELETE FROM $table WHERE Loginname = '$id'";
+            //Execute delete
+            $result = mysqli_query($conn, $query);
+            header("Location: editUser.php");
+            exit;
         }
-    }else if ($_SESSION['Table'] === 'Homework'){
-        //Get the id variable
-        $id = $_GET['link'];
-        //find the homework
-        $query = "DELETE FROM Homework WHERE Number = '$id'";
-        //Execute delete
-        $result = mysqli_query($conn, $query);
-        header("Location: homework.php");
-    }else if ($_SESSION['Table'] === 'Documents'){
-        //Get the id variable
-        $id = $_GET['link'];
-        //find the doc
-        $query = "DELETE FROM Documents WHERE Number = '$id'";
-        //Execute delete
-        $result = mysqli_query($conn, $query);
-        header("Location: documents.php");
     }
+
+
 ?>

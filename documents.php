@@ -1,15 +1,17 @@
 <?php
-    include "db_connection.php";
+    include "functions.php";
+    //database connect
+    connected($conn);
     //check if user is loged in
     session_start();
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
 
-    $_SESSION['Table'] = 'Documents';
+    $_SESSION['Table'] = 'documents';
 
     //Get all the data from the table Documents
-    $sql = "SELECT * FROM Documents";
+    $sql = "SELECT * FROM documents";
     $data = mysqli_query($conn, $sql);
 ?>
 <!DOCTYPE html>

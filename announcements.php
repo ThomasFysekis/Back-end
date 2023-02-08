@@ -1,16 +1,18 @@
 <?php
-    include "db_connection.php";
-
+    include "functions.php";
+    //database connect
+    connected($conn);
     //check if the user is loged in 
     session_start();
 
-    $_SESSION['Table'] = 'Announcements';
+    $_SESSION['Table'] = 'announcements';
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
     //Get all the data from the tabel Announcements
-    $sql = "SELECT * FROM Announcements";
+    $sql = "SELECT * FROM announcements";
     $all_data = mysqli_query($conn, $sql);
+    
 ?>
 <!DOCTYPE html>
 <html lang="el">

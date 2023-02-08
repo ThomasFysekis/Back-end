@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 04, 2023 at 02:19 PM
+-- Generation Time: Feb 08, 2023 at 11:51 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Announcements`
+-- Table structure for table `announcements`
 --
 
-CREATE TABLE `Announcements` (
+CREATE TABLE `announcements` (
   `Number` int(11) NOT NULL,
   `Date` date NOT NULL,
   `Subject` varchar(1000) NOT NULL,
@@ -35,44 +35,64 @@ CREATE TABLE `Announcements` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `Announcements`
+-- Dumping data for table `announcements`
 --
 
-INSERT INTO `Announcements` (`Number`, `Date`, `Subject`, `MainText`) VALUES
-(1, '2311-12-31', '123', '123123123123'),
-(2, '2022-12-08', 'Ανακοίνωση εργασίας', 'Η 1η εργασία έχει ανακοινωθεί στην ιστοσελίδα Εργασίες.'),
-(3, '2022-12-08', 'Ακύρωση μαθήματος', 'Το επόμενο μαθήμα δεν θα πραγματοποιηθεί.');
+INSERT INTO `announcements` (`Number`, `Date`, `Subject`, `MainText`) VALUES
+(1, '2022-10-08', 'Έναρξη μαθημάτων', 'Τα μαθήματα αρχίζουν την Δευτέρα 17/08/2022'),
+(3, '2022-12-08', 'Ακύρωση μαθήματος', 'Το επόμενο μαθήμα δεν θα πραγματοποιηθεί.'),
+(4, '2022-08-25', 'Εργασία bonus', 'Έχει αναρτηθεί στην ιστοσελίδα Εργασίες μια άσκηση bonus με άριστα το 10% της τελικής βαθμολογίας.');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Documents`
+-- Table structure for table `documents`
 --
 
-CREATE TABLE `Documents` (
+CREATE TABLE `documents` (
   `Number` int(11) NOT NULL,
   `Title` varchar(100) NOT NULL,
   `Description` varchar(1000) NOT NULL,
-  `FileLocation` mediumblob NOT NULL
+  `FileLocation` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `Documents`
+-- Dumping data for table `documents`
 --
 
-INSERT INTO `Documents` (`Number`, `Title`, `Description`, `FileLocation`) VALUES
-(12, '1', '1', 0x6f6b6179),
-(312, '312', '312', 0x75706c6f61642f53637265656e73686f742066726f6d20323032322d30392d31392032322d31322d30312e706e67),
-(1234, '1234', '1234', 0x75706c6f61642f32303232303431385f3233333432372e6a7067),
-(123123123, '123', '123', 0x75706c6f61642f323031372d31382d455247415349415f7061727441312d48544d4c2e646f63);
+INSERT INTO `documents` (`Number`, `Title`, `Description`, `FileLocation`) VALUES
+(1, 'Αλγόρυθμοι τυφλής αναζήτησης:', 'Στον παρακάτω σύνδεσμο μπορείτε να κατεβάσετε τις διαφάνειες για τους αλγόριθμους BFS,DFS και ID.', './uploads/file1.doc'),
+(2, 'Αλγόρυθμοι ευρετικής αναζήτησης:', 'Στον παρακάτω σύνδεσμο μπορείτε να κατεβάσετε τις διαφάνειες για τους αλγόριθμους ευρετικής αναζήτησης.', './uploads/file2.doc');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Users`
+-- Table structure for table `homework`
 --
 
-CREATE TABLE `Users` (
+CREATE TABLE `homework` (
+  `Number` int(11) NOT NULL,
+  `Goal` varchar(225) NOT NULL,
+  `Subject` varchar(225) NOT NULL,
+  `Delivered` varchar(225) NOT NULL,
+  `Date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `homework`
+--
+
+INSERT INTO `homework` (`Number`, `Goal`, `Subject`, `Delivered`, `Date`) VALUES
+(1, 'Εξάσκηση στον αλγόριθμοBFS,Εξάσκηση στον αλγόριθμο DFS,Εξάσκηση στον αλγόριθμο ID', './uploads/ergasia1.doc', 'Γραπτή αναφορά σε word,Παρουσίαση σε powerpoint', '2022-09-01'),
+(2, 'Εξάσκηση στις γνώσεις που λάβατε,η εργασία είναι bonus', './uploads/ergasia2.doc', 'Γραπτή αναφορά σε word,Παρουσίαση σε powerpoint', '2022-10-01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
   `Role` varchar(30) NOT NULL,
   `Name` varchar(30) NOT NULL,
   `Lastname` varchar(30) NOT NULL,
@@ -81,36 +101,40 @@ CREATE TABLE `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `Users`
+-- Dumping data for table `users`
 --
 
-INSERT INTO `Users` (`Role`, `Name`, `Lastname`, `Loginname`, `Password`) VALUES
-('Student', 'idk', 'idk', 'idk', 'idk'),
-('Student', 'thomas', 'dekserq', 'kepo@gmail.com', '123'),
-('Student', 'Mixalis', 'lastname', 'mixalis@gmail.com', '123123123'),
+INSERT INTO `users` (`Role`, `Name`, `Lastname`, `Loginname`, `Password`) VALUES
 ('Student', 'Stergios', 'Moumtzis', 'stergios@gmail.com', '123123'),
-('Tutor', 'Thomas', 'Fysekis', 'thwmas321@gmail.com', '321321');
+('Tutor', 'tommy', 'fys', 'thwmas1234@hotmail.gr', '123'),
+('Tutor', 'Θωμάς', 'Φυσέκης', 'thwmas321@gmail.com', '321321');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `Announcements`
+-- Indexes for table `announcements`
 --
-ALTER TABLE `Announcements`
+ALTER TABLE `announcements`
   ADD PRIMARY KEY (`Number`);
 
 --
--- Indexes for table `Documents`
+-- Indexes for table `documents`
 --
-ALTER TABLE `Documents`
+ALTER TABLE `documents`
   ADD PRIMARY KEY (`Number`);
 
 --
--- Indexes for table `Users`
+-- Indexes for table `homework`
 --
-ALTER TABLE `Users`
+ALTER TABLE `homework`
+  ADD PRIMARY KEY (`Number`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
   ADD PRIMARY KEY (`Loginname`);
 
 --
@@ -118,16 +142,22 @@ ALTER TABLE `Users`
 --
 
 --
--- AUTO_INCREMENT for table `Announcements`
+-- AUTO_INCREMENT for table `announcements`
 --
-ALTER TABLE `Announcements`
+ALTER TABLE `announcements`
   MODIFY `Number` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12347;
 
 --
--- AUTO_INCREMENT for table `Documents`
+-- AUTO_INCREMENT for table `documents`
 --
-ALTER TABLE `Documents`
+ALTER TABLE `documents`
   MODIFY `Number` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123123124;
+
+--
+-- AUTO_INCREMENT for table `homework`
+--
+ALTER TABLE `homework`
+  MODIFY `Number` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123124;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

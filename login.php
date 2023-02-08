@@ -1,6 +1,7 @@
 <?php
     //Include the connection for the database
-    include "db_connection.php";
+    include "functions.php";
+    connected($conn);
 
     session_start();
     
@@ -10,7 +11,7 @@
         $password = $_POST['psw'];
         $role;
         //Search the database
-        $select_query = mysqli_query($conn, "SELECT * FROM Users WHERE Loginname = '$email' AND Password = '$password'");
+        $select_query = mysqli_query($conn, "SELECT * FROM users WHERE Loginname = '$email' AND Password = '$password'");
         $row  = mysqli_fetch_array($select_query);
         //If we found the correct data,log in,else try again.
         if(is_array($row)) {

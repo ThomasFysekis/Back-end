@@ -1,6 +1,7 @@
 <?php
-                  
-    include "db_connection.php";
+    include "functions.php";
+    //database connect
+    connected($conn);
     //check if the user is loged in
     session_start();
     if(!$_SESSION["Loginname"]){
@@ -23,7 +24,7 @@
         $sub = $_POST['sub'];
         $text = $_POST['text'];
         //Find all the Tutor users
-        $sql = "SELECT Loginname FROM Users WHERE Role = 'Tutor'";
+        $sql = "SELECT Loginname FROM users WHERE Role = 'Tutor'";
         //Execute
         $row = mysqli_query($conn, $sql);
         //data is an array of Tutor users.
@@ -56,6 +57,7 @@
                 $displayMesasge = "Error!" . $e->errorMessage();
             } 
         }
+        
     }
         
     

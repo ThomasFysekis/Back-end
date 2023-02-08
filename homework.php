@@ -1,16 +1,18 @@
 <?php
-    include "db_connection.php";
+    include "functions.php";
+    //database connect
+    connected($conn);
     //check if the user is loged in
     session_start();
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
 
-    $_SESSION['Table'] = 'Homework';
+    $_SESSION['Table'] = 'homework';
 
     
     //Get all the data from the table
-    $sql = "SELECT * FROM Homework";
+    $sql = "SELECT * FROM homework";
     $result = mysqli_query($conn, $sql);
 
 
@@ -58,64 +60,68 @@
                 <a href="homework.php" class="button">Εργασίες</a>     
             </div>
             <div class="main-border">
-                <?php
-                    //If the user is Tutor,he can create announcments
-                    if($_SESSION['Role'] === 'Tutor'){
-                        echo '<span style="font-size: 30px;"><a href="editHomework.php">Προσθήκη νέας Εργασίας</a></span>';
-                    }
-                ?>
-
-                <!---An error message when the Tutor is creating an announcement with the same  id--->
-                <?php
-                    //the message is from editAnnouncements.php
-                    if ($_GET){
-                ?>
-
-                <p style="color:red;">You can't create a homework with the same id (Number).</p>
-
-                <?php
-                    }
-                ?>
-                                    
-
-
-                <?php
-                    //while we have data,print them
-                    while($row = mysqli_fetch_assoc($result)){
-                ?>
                 <div class="border-bottom">
 
-                    <h2>Εργασία <?php echo $row["Number"]; 
-                        //If Tutor,delete or edit annnouncement
+                    <?php
+                        //If the user is Tutor,he can create announcments
                         if($_SESSION['Role'] === 'Tutor'){
-                            //Send the id to delete/edit
-                            echo '<a href=delete.php?link=' .$row["Number"] .'>[Διαγραφή] </a>';
-                            echo '<a href="editHomework.php?link=' . $row["Number"] . '">[Επεξεργασία]</a>';
+                            echo '<span style="font-size: 30px;"><a href="editHomework.php">Προσθήκη νέας Εργασίας</a></span>';
                         }
+                    ?>
+
+                    <!---An error message when the Tutor is creating an announcement with the same  id--->
+                    <?php
+                        //the message is from editAnnouncements.php
+                        if ($_GET){
+                    ?>
+
+                    <p style="color:red;">You can't create a homework with the same id (Number).</p>
+
+                    <?php
+                        }
+                    ?>
+                                        
+
+
+                    <?php
+                        //while we have data,print them
+                        while($row = mysqli_fetch_assoc($result)){
+                    ?>
                     
-                    ?></h2>
-                    <div class="inner-text-for-hm">
-                        <pa>Στόχοι:Οι στόχοι τις εργασίας είναι</pa>
-                        <ul class="text-list">
-                            <li><?php echo $row["Goal"];?></li>
-                        </ul>
-                        <pa>Εκφώνηση:</pa>
-                        <br>
-                        <br>
-                        <pa> Κατεβάστε την εκφώνηση της εργασίας από <a  href="./<?php echo $row['Subject']?>">εδώ.</a> </pa>
-                        <br>
-                        <br>
-                        <pa>Παραδοτέα: </pa>
-                        <ul class="text-list">
-                            <li><?php echo $row["Delivered"];?></li>
-                        </ul>
+                    <div class="border-bottom">
+                        <h2>Εργασία <?php echo $row["Number"]; 
+                            //If Tutor,delete or edit annnouncement
+                            if($_SESSION['Role'] === 'Tutor'){
+                                //Send the id to delete/edit
+                                echo '<a href=delete.php?link=' .$row["Number"] .'>[Διαγραφή] </a>';
+                                echo '<a href="editHomework.php?link=' . $row["Number"] . '">[Επεξεργασία]</a>';
+                            }
                         
-                        <p style="color:red">Ημερομηνία παράδοσης: <?php echo $row["Date"];?></p>
+                        ?></h2>
+                        <div class="inner-text-for-hm">
+                            <pa>Στόχοι:Οι στόχοι τις εργασίας είναι</pa>
+                            <ul class="text-list">
+                                <li><?php echo $row["Goal"];?></li>
+                            </ul>
+                            <pa>Εκφώνηση:</pa>
+                            <br>
+                            <br>
+                            <pa> Κατεβάστε την εκφώνηση της εργασίας από <a  href="./<?php echo $row['Subject']?>">εδώ.</a> </pa>
+                            <br>
+                            <br>
+                            <pa>Παραδοτέα: </pa>
+                            <ul class="text-list">
+                                <li><?php echo $row["Delivered"];?></li>
+                            </ul>
+                            
+                            <p style="color:red">Ημερομηνία παράδοσης: <?php echo $row["Date"];?></p>
+                        </div>
                     </div>
+                        <?php
+                            //end of while
+                            }
+                        ?>
                 </div>
-                <?php
-                    }
-                ?>
                 <form action="logout.php" method="post">
                     <button type="submit" class="login-but" name="edit-users">Log Out</button>
                 </form>

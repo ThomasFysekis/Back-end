@@ -1,37 +1,37 @@
 <?php
+    include "functions.php";
+    //database connect
+    connected($conn);   
+    
     session_start();
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
-    include "db_connection.php";    
     //get the email from the user(key)
     $id = $_GET['link'];
 
-    //Selecet all the data from user with the right  id
-    $sql = "SELECT * FROM Users WHERE Loginname = '$id'";
+    //Selecet all the data from user with the right id
+    $sql = "SELECT * FROM users WHERE Loginname = '$id'";
     $data =  mysqli_query($conn, $sql);
     //row is a array with the data of our user,we can play the data
-    //into the placeholder so the user can what he changes
+    //into the placeholder so the user can see what he changes
     $row = mysqli_fetch_assoc($data);
 
     if(isset($_POST['add-button'])) {
         //Get what user wants to change
-        $role = $_POST['role'];
+        $role = $_POST['select-user'];
         $name = $_POST['name'];
         $lastname = $_POST['lastname'];
         $loginname = $_POST['loginname'];
         $pw = $_POST['password'];
 
-        if($role == 'Student' or $role == 'Tutor'){
-        
-            //update user data
-            $update = "UPDATE Users SET Role ='".$role."',Name ='".$name."',Lastname ='".$lastname."',Loginname ='".$loginname."',Password ='".$pw."' WHERE Loginname = '".$id."'";
-            //Execute update
-            mysqli_query($conn, $update);
-            header("Location: editUser.php");
-        }else{
-            echo '<span style="color:#FF0000;text-align:center;"> The Role section must be Tutor or Student!</span>';
-        }
+    
+        //update user data
+        $update = "UPDATE users SET Role ='".$role."',Name ='".$name."',Lastname ='".$lastname."',Loginname ='".$loginname."',Password ='".$pw."' WHERE Loginname = '".$id."'";
+        //Execute update
+        mysqli_query($conn, $update);
+        header("Location: editUser.php");
+
     }
 ?>
 
@@ -121,7 +121,12 @@
 
             <label for="role"><b>Role</b></label>
             <?php echo $row["Role"]?>
-            <input type="text" placeholder="new Role" name="role" required>
+            <br>
+            <br>
+            <input type="radio" id="admin" name="select-user" value="Tutor" required>
+            <label for="admin">Tutor</label><br>
+            <input type="radio" id="not-admin" name="select-user" value="Student" required>
+            <label for="not-admin">Student</label><br>
 
             <hr>
 

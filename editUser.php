@@ -1,14 +1,17 @@
 <?php
+
+    include "functions.php";
+    //database connect
+    connected($conn);
     session_start();
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
 
-    $_SESSION['Table'] = 'Users';
+    $_SESSION['Table'] = 'users';
 
-    include "db_connection.php";
     //select everything from the table Users
-    $sql = "SELECT * FROM Users";
+    $sql = "SELECT * FROM users";
     //Make the connection
     $data = mysqli_query($conn, $sql);
 
@@ -22,7 +25,7 @@
         $pw = $_POST['password'];
 
         //insert the user
-        $sql = "INSERT INTO Users (Role, Name, Lastname, Loginname, Password)
+        $sql = "INSERT INTO users (Role, Name, Lastname, Loginname, Password)
             VALUES ('$role', '$name', '$lastname', '$loginname', '$pw')";
         mysqli_query($conn, $sql);
         header("Location: editUser.php");
@@ -155,7 +158,7 @@
             <?php
                 //if user tries to delete himself he gets an error message
                 if ($_GET){
-                    echo "You can't delete yourself!";
+                    echo "<font color='red'>You can't delete yourself!</font>";
                 }
             ?>
                 <table id="users-table">
@@ -180,7 +183,7 @@
                         <td><?php echo$row["Loginname"]?></td>
                         <td><?php echo$row["Password"]?></td>
                         <td><a href="updateUser.php?link=<?php echo $row["Loginname"] ?>" class="button" type="submit" name="insert-button">Επεξεργασία</a></td>
-                        <td><a href="delete.php?link=<?php echo $row["Loginname"] ?>" class="button" type="submit" name="delete-button">Διαγραφή</a></td>
+                        <td><a href="delete.php?email=<?php echo $row["Loginname"] ?>" class="button" type="submit" name="delete-button">Διαγραφή</a></td>
                     </tr>
                     <?php
                     }
@@ -208,7 +211,6 @@
                             <label for="admin">Tutor</label><br>
                             <input type="radio" id="not-admin" name="select-user" value="Student" required>
                         <label for="not-admin">Student</label><br></td>
-                        <!--<td><input type="text" placeholder="Role" name="role" required></td>-->
                         <td><input type="text" placeholder="Name" name="name" required></td>
                         <td><input type="text" placeholder="Lastname" name="lastname" required></td>
                         <td><input type="text" placeholder="Login name (Email)" name="loginname" required></td>

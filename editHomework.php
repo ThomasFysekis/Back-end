@@ -1,5 +1,9 @@
 <?php
-    include "db_connection.php";
+    include "functions.php";
+    //database connect
+    connected($conn);
+
+    
     //check if user is loged in
     session_start();
     if(!$_SESSION["Loginname"]){
@@ -10,52 +14,12 @@
     if($_GET['link'] == true){
         
         $id = $_GET['link'];
-        $sql = "SELECT * FROM Homework WHERE Number = '$id'";
+        $sql = "SELECT * FROM homework WHERE Number = '$id'";
         $data = mysqli_query($conn, $sql);
         //row is an array with the data of our user,we can play the data
         //into the placeholder so the user can change waht he wants
         $row = mysqli_fetch_assoc($data);
     }
-
-
-    function uploadFile($pwd){
-        $path_filename_ext = "";
-        if (($_FILES[$pwd]['name'] != "")) {
-            // Where the file is going to be stored
-            $target_dir = "./uploads/";
-            $file = $_FILES[$pwd]['name'];
-            $path = pathinfo($file);
-            $filename = $path['filename'];
-            $ext = $path['extension'];
-            $temp_name = $_FILES[$pwd]['tmp_name'];
-            $path_filename_ext = $target_dir . $filename . "." . $ext;
-            
-            //upload file
-            move_uploaded_file($temp_name, $path_filename_ext);
-        }
-        return $path_filename_ext;
-    }
-
-    function checkForValidID($id){
-        include "db_connection.php";
-        //User can't create an homework that already exist(with the same ID==number)
-        $query = "SELECT Number FROM Homework";
-        $result = mysqli_query($conn, $query);
-        $flag = false;
-        //Search if the id exists in the table
-        while ( $array = mysqli_fetch_assoc($result)){
-            if ($array["Number"] == $id){
-                $flag = true;
-            }
-        }
-        if ($flag){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    
 
 
     if(isset($_POST['add-button'])) {
@@ -66,26 +30,40 @@
         $date = $_POST['date'];
         $location = uploadFile("documentToUpload");
 
+
+        //This is the case that the user is editing the homework and he doesn't change the uique ID
+        if($_GET['link'] == true){
+            $id = $_GET['link'];
+            if($id == $number){
+                $update = "UPDATE homework SET Goal ='".$goal."', Subject = '".$location."', Delivered = '".$delivered."', Date = '".$date."' WHERE Number = '".$id."'";
+                mysqli_query($conn, $update);
+                //Go back to documents
+                header("Location: documents.php");
+                exit;
+            }
+        }
+
+
         //check if the id is unique or not
         if(checkForValidID($number) == false){
             //if the user wants to edit/update the homework
             if($_GET['link'] == true){
                 $id = $_GET['link'];
-                $update = "UPDATE Homework SET Number ='".$number."', Goal ='".$goal."', Subject = '".$location."', Delivered = '".$delivered."', Date = '".$date."' WHERE Number = '".$id."'";
+                $update = "UPDATE homework SET Number ='".$number."', Goal ='".$goal."', Subject = '".$location."', Delivered = '".$delivered."', Date = '".$date."' WHERE Number = '".$id."'";
                 mysqli_query($conn, $update);
-                //Go back to announcements
+                //Go back to homework
                 header("Location: homework.php");
             }
             //Create homework
             else{
-                $sql = "INSERT INTO Homework (Number, Goal, Subject, Delivered, Date)
+                $sql = "INSERT INTO homework (Number, Goal, Subject, Delivered, Date)
                     VALUES('$number', '$goal', '$location', '$delivered', '$date')";
                 mysqli_query($conn, $sql);
-                //Go back to announcements
+                //Go back to homework
                 header("Location: homework.php");
             }
         }else{
-            //Send a warning to homework that the user is trying to create a anouncnement with the same id
+            //Send a warning to homework that the user is trying to create a homework with the same id
             $value = 0;
             header("Location: homework.php?value = .$value");
         }
@@ -171,7 +149,7 @@
     </style>
     <body>
 
-    <form action="" method="post" style="border:1px solid #ccc">
+    <form action="" method="post" enctype="multipart/form-data" style="border:1px solid #ccc">
         <div class="container">
             <h1>Προσθήκη νέας Εργασίας</h1>
 

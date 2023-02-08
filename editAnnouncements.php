@@ -1,7 +1,11 @@
 <?php
     //check if user is loged in
     session_start();
-    include "db_connection.php";
+    include "functions.php";
+    //database connect
+    connected($conn);
+
+    
     if(!$_SESSION["Loginname"]){
         header("Location: login.php");
     }
@@ -12,31 +16,13 @@
     //get all the data from the table and print them into placeholders
     if ($_GET['link'] == true){
         $id = $_GET['link'];
-        $sql = "SELECT * FROM Announcements WHERE Number = '$id'";
+        $sql = "SELECT * FROM announcements WHERE Number = '$id'";
         $data = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($data);
    }
 
    
-   
-   function checkForValidID($id){
-        include "db_connection.php";
-        //User can't create an annoucmements that already exist(with the same ID==number)
-        $query = "SELECT Number FROM Announcements";
-        $result = mysqli_query($conn, $query);
-        $flag = false;
-        //Search if the id exists in the table
-        while ( $array = mysqli_fetch_assoc($result)){
-            if ($array["Number"] == $id){
-                $flag = true;
-            }
-        }
-        if ($flag){
-            return true;
-        }else{
-            return false;
-        }
-    }
+
    
    
     //create/update announcement 
@@ -46,20 +32,32 @@
         $date = $_POST['date'];
         $sub = $_POST['subject'];
         $text = $_POST['main-text'];
-        
+
+        //This is the case that the user is editing the anouncement and he doesn't change the uique ID
+        if($_GET['link'] == true){
+            $id = $_GET['link'];
+            if($id == $number){
+                $update = "UPDATE announcements SET Date ='".$date."', Subject ='".$sub."', MainText = '".$text."' WHERE Number = '".$id."'";
+                mysqli_query($conn, $update);
+                //Go back to announcements
+                header("Location: announcements.php");
+                exit;
+            }
+        }
+
         //check if the id is unique or not
         if(checkForValidID($number) == false){
             //If the user wants to edit/update the announcement he gets the ID variable
             if ($_GET['link'] == true){
                 $id = $_GET['link'];
-                $update = "UPDATE Announcements SET Date ='".$date."', Subject ='".$sub."', MainText = '".$text."', Number = '".$number."' WHERE Number = '".$id."'";
+                $update = "UPDATE announcements SET Date ='".$date."', Subject ='".$sub."', MainText = '".$text."', Number = '".$number."' WHERE Number = '".$id."'";
                 mysqli_query($conn, $update);
                 //Go back to announcements
                 header("Location: announcements.php");
             }
             //Create the announcement
             else{
-                $sql = "INSERT INTO Announcements (Number, Date, Subject, MainText) 
+                $sql = "INSERT INTO announcements (Number, Date, Subject, MainText) 
                     VALUES ('$number', '$date', '$sub', '$text')";
                 mysqli_query($conn, $sql);
                 //Go back to announcements
