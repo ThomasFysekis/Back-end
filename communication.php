@@ -7,6 +7,15 @@
         header("Location: login.php");
     }
 
+    $loginname = $_SESSION['Loginname'];
+
+    use PHPMailer\PHPMailer\Exception;
+    use PHPMailer\PHPMailer\PHPMailer;
+
+    require './PHPMailer/Exception.php';
+    require './PHPMailer/PHPMailer.php';
+    require './PHPMailer/SMTP.php';
+
     
     if(isset($_REQUEST['submit'])){
         //Collect the data from the form
@@ -20,16 +29,64 @@
         //data is an array of Tutor users.
         while($data = mysqli_fetch_assoc($row)){
             //Send the email
-            mail($data['Loginname'], $sub, $text);
+            $recipient = $data['Loginname'];
+
+            $mail = new PHPMailer();
+            // Settings
+            $mail->IsSMTP();
+            $mail->CharSet = 'UTF-8';
+            $mail->Host       = "mail.example.com";    // SMTP server example
+            $mail->SMTPDebug  = 0;                     // enables SMTP debug information (for testing)
+            $mail->SMTPAuth   = true;                  // enable SMTP authentication
+            $mail->Port       = 25;                    // set the SMTP port for the GMAIL server
+            $mail->Username   = "username";            // SMTP account username example
+            $mail->Password   = "password";            // SMTP account password example
+            // Content
+            $mail->setFrom($loginname);   
+            $mail->addAddress($recipient);              
+            $mail->Subject = $sub;
+            $mail->Body    = $text;
+
+            //Send the mail
+            try{
+                $mail->send();
+                $displayMessage = "Message Successfully Sent to Tutors";
+
+            }catch(Exception $e){
+                $displayMesasge = "Error!" . $e->errorMessage();
+            } 
         }
-        
     }
+        
+    
 ?>
 <!DOCTYPE html>
 <html lang="el">
     <head>
         <link rel="stylesheet" href="style.css">
         <title>Επικοινωνία</title>
+        <style>
+
+        .login-but:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+
+        .login-but {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+        }
+
+        </style>
     </head>
     <body>
 
@@ -52,12 +109,12 @@
                             <label for="Αποστολέας">
                                 Αποστολέας
                             </label>
-                            <input type="text" id="Αποστολέας" name="sender">
+                            <input type="text" id="Αποστολέας" name="sender" required>
                             <label for="Θέμα">
                                 Θέμα
                             </label>
-                            <input type="text" id="Θέμα" name="sub">
-                            <label for="Κείμενο">
+                            <input type="text" id="Θέμα" name="sub" required>
+                            <label for="Κείμενο" required>
                                 Κείμενο
                             </label>
                             <textarea name="text"></textarea>
@@ -71,8 +128,13 @@
                         <h2>Αποστολή e-mail με χρήση e-mail διεύθυνσης</h2>
                         <h4>Εναλλακτικά μπορείτε να αποστείλετε e-mail στην παρακάτω διεύθυνση ηλεκτρονικού ταχυδρομείου <a href = "mailto: tutor@csd.auth.test.gr">tutor@csd.auth.test.gr</a></h4>
                     </div>
+
+                    <div style="display:flex; color:red; justify-content: center; text-align: center;font-size:x-large">
+                            <?php echo $displayMessage ?>
+                    </div>
+
                     <form action="logout.php" method="post">
-                        <button type="submit" class="here" name="log-out">Log out</button>
+                        <button type="submit" class="login-but" name="edit-users">Log out</button>
                     </form>
                 </div>
                 

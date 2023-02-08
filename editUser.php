@@ -12,29 +12,22 @@
     //Make the connection
     $data = mysqli_query($conn, $sql);
 
-    //if the user press add user he goes to functions createUser
+    //if the user press add user he creates a user
     if(isset($_POST['add-button'])) {
-        createUser();
-    }
-    
-    function createUser(){
-        include "db_connection.php";
         //Get the info from the form
-        $role = $_POST['role'];
+        $role  = $_POST['select-user'];
         $name = $_POST['name'];
         $lastname = $_POST['lastname'];
         $loginname = $_POST['loginname'];
         $pw = $_POST['password'];
 
-        if ($role == 'Tutor' or $role == 'Student'){
-            $sql = "INSERT INTO Users (Role, Name, Lastname, Loginname, Password)
-                VALUES ('$role', '$name', '$lastname', '$loginname', '$pw')";
-            mysqli_query($conn, $sql);
-            header("Location: editUser.php");
-        }else{
-            echo '<span style="color:#FF0000;text-align:center;"> The Role section must be Tutor or Student!</span>';
-        }
+        //insert the user
+        $sql = "INSERT INTO Users (Role, Name, Lastname, Loginname, Password)
+            VALUES ('$role', '$name', '$lastname', '$loginname', '$pw')";
+        mysqli_query($conn, $sql);
+        header("Location: editUser.php");
     }
+
 ?>
 
 <!DOCTYPE html>
@@ -211,7 +204,11 @@
                         <th>Loginname(Email)</th>
                         <th>Password</th>
                     </tr>
-                        <td><input type="text" placeholder="Role" name="role" required></td>
+                        <td> <input type="radio" id="admin" name="select-user" value="Tutor" required>
+                            <label for="admin">Tutor</label><br>
+                            <input type="radio" id="not-admin" name="select-user" value="Student" required>
+                        <label for="not-admin">Student</label><br></td>
+                        <!--<td><input type="text" placeholder="Role" name="role" required></td>-->
                         <td><input type="text" placeholder="Name" name="name" required></td>
                         <td><input type="text" placeholder="Lastname" name="lastname" required></td>
                         <td><input type="text" placeholder="Login name (Email)" name="loginname" required></td>

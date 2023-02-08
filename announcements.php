@@ -17,6 +17,28 @@
     <head>
         <link rel="stylesheet" href="style.css">
         <title>Ανακοινώσεις</title>
+        <style>
+
+        .login-but:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+
+        .login-but {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+        }
+
+        </style>
     </head>
     <body>
         <header>
@@ -36,9 +58,21 @@
                     <?php
                         //If the user is Tutor,he can create announcments
                         if($_SESSION['Role'] === 'Tutor'){
-                            echo '<span style="font-size: 30px;"><a href="announcementsSettings.php">Προσθήκη νέας ανακοίνωσεις</a></span>';
+                            echo '<span style="font-size: 30px;"><a href="editAnnouncements.php">Προσθήκη νέας ανακοίνωσεις</a></span>';
                         }
                     ?>
+                    <!---An error message when the Tutor is creating an announcement with the same  id--->
+                    <?php
+                        //the message is from editAnnouncements.php
+                        if ($_GET){
+                    ?>
+
+                    <p style="color:red;">You can't create an announcement with the same id (Number).</p>
+
+                    <?php
+                        }
+                    ?>
+
                     <?php
                         //while we have announcements,print them
                         while($row = mysqli_fetch_assoc($all_data)){    
@@ -50,7 +84,7 @@
                             if($_SESSION['Role'] === 'Tutor'){
                                 //Send the id to delete/edit
                                 echo '<a href="delete.php?link=' . $row["Number"] . '">[Διαγραφή]</a>';
-                                echo '<a href="announcementsSettings.php?link=' . $row["Number"] . '">[Επεξεργασία]</a>';
+                                echo '<a href="editAnnouncements.php?link=' . $row["Number"] . '">[Επεξεργασία]</a>';
                             }
                         ?>
                         </h2>
@@ -73,7 +107,7 @@
                 <a href="#" class="top">top</a>
                 <br>
                 <form action="logout.php" method="post">
-                    <button type="submit" class="here" name="log-out">Log out</button>
+                    <button type="submit" class="login-but" name="log-out">Log out</button>
                 </form>
                 <br>
                 <br>

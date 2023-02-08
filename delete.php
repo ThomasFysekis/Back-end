@@ -1,4 +1,5 @@
 <?php
+
     include "db_connection.php";
     session_start();
 
@@ -20,13 +21,15 @@
     }else if ($_SESSION['Table'] === 'Users'){
         //get the email from the user(key)
         $id = $_GET['link'];
-        if(!$_SESSION["Loginname"] === $id){
+        //If the user is trying delete himself,send him an error message
+        if(!($_SESSION["Loginname"] == $id)){
             //Find the user
             $query = "DELETE FROM Users WHERE Loginname = '$id'";
             //Execute delete
             $result = mysqli_query($conn, $query);
             header("Location: editUser.php");
         }else{
+            //send an error message to editUser because he is trying to delete himself
             $value = 0;
             header("Location: editUser.php?value = .$value");
         }
