@@ -5,7 +5,7 @@
         $DB_HOST = 'localhost';
         $DB_USER = 'root'; 
         $DB_PASS = '';
-        $DB_NAME = 'University_DB'; 
+        $DB_NAME = 'student3770'; 
         $conn = mysqli_connect($DB_HOST,$DB_USER,$DB_PASS,$DB_NAME);
         return $conn;   
     }
