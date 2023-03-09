@@ -2,7 +2,7 @@
 
 ### This is a small project from my univeristy,it's a website where there are tutors and students,
 
-* ## Tutors can upload homeworks,documents and whatever a virtual learning environment neeed.
+* ## Tutors can upload homeworks,documents and whatever a virtual learning environment need.
 
 * ## The assignment was focused on the back-end,so i made the front-end very poorly in a day.
 
