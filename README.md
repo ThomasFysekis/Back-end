@@ -1,13 +1,19 @@
 # Virtual Learning Environment
 
-### This is a small project from my univeristy,it's a website where there are tutors and students,
+This is a small project from my university that consists of a website where tutors and students can interact.
 
-* ## Tutors can upload homeworks,documents and whatever a virtual learning environment neeed.
+## Features
 
-* ## The assignment was focused on the back-end,so i made the front-end very poorly in a day.
 
-* ## There are no sign ups,tutors delete,add and edit the users.
+- Tutors can upload homework, documents and other materials required for a virtual learning environment.
 
-*Log in as Tutor: thwmas321@gmail.com PW: 321321*
+- There are no sign-ups required; tutors can add, delete, and edit users.
 
-*Log in as Student: mixalis@gmail.com PW: 12345*
+- Login credentials for tutors: 
+    - Email: thwmas321@gmail.com
+    - Password: 321321
+- Login credentials for students:
+    - Email: mixalis@gmail.com
+    - Password: 12345
+
+Please note that the focus of this project was on the back-end functionality implemented using PHP, rather than the front-end design, which was developed hastily in a day and may not be optimized for user experience.
